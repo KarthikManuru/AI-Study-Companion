@@ -4,6 +4,7 @@
 
 **An intelligent, production-grade AI learning workspace that helps learners comprehend complex materials, practice adaptively, track conceptual mastery, and eliminate knowledge gaps.**
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-ai--study--companion.vercel.app-brightgreen?style=for-the-badge&logo=vercel)](https://ai-study-companion-ecru.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-14.2.29-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
@@ -13,17 +14,33 @@
 [![Tests](https://img.shields.io/badge/Tests-25%20Passed-brightgreen?style=for-the-badge&logo=vitest)](https://vitest.dev/)
 [![License](https://img.shields.io/badge/License-MIT-purple?style=for-the-badge)](LICENSE)
 
-[Features](#-key-features) • [System Architecture](#-system-architecture) • [Getting Started](#-getting-started) • [Dual-Auth Security](#-dual-auth-security--isolation) • [Documentation & PDFs](#-documentation--specifications) • [Evaluation Suite](#-testing--evaluation-framework)
+### 🚀 **Live Production App**: [https://ai-study-companion-ecru.vercel.app](https://ai-study-companion-ecru.vercel.app)
+
+[Live Demo](#-live-production-deployment) • [Features](#-key-features) • [System Architecture](#-system-architecture) • [Getting Started](#-getting-started) • [Dual-Auth Security](#-dual-auth-security--isolation) • [Documentation & PDFs](#-documentation--specifications)
 
 ---
 
 </div>
 
+## 🌐 Live Production Deployment
+
+The application is deployed live on **Vercel** backed by a **Neon Serverless PostgreSQL (pgvector)** database and **Upstash Redis** distributed message broker.
+
+| Portal | URL | Demo Account | Password |
+| :--- | :--- | :--- | :--- |
+| **🎓 Learner Workspace** | [**Live Learner Portal**](https://ai-study-companion-ecru.vercel.app/auth/login) | `demo@studycompanion.ai` | `password123` |
+| **⚙️ Superadmin Console** | [**Live Admin Portal**](https://ai-study-companion-ecru.vercel.app/admin/login) | `admin@studycompanion.ai` | `admin123` |
+
+> [!TIP]
+> **Parallel Dual-Session Support**: The Learner and Admin portals utilize strictly isolated authentication cookies (`next-auth.session-token` vs `next-auth.admin-session-token`). You can test both portals simultaneously in the same browser window without session conflicts or accidental logouts.
+
+---
+
 ## 🌟 Key Features
 
 ### 1. 📚 Hierarchical Knowledge Organization
 - **Spaces & Projects**: Organize study domains hierarchically (e.g., *Computer Science* $\to$ *Distributed Systems* $\to$ *Consensus Protocols*).
-- **Asynchronous Ingestion**: Upload multi-page lecture notes, textbooks, and PDF slides processed in the background without blocking the UI.
+- **Asynchronous Ingestion**: Multi-page lecture notes, textbooks, and PDF slides uploaded on the web app are processed asynchronously via BullMQ & Upstash Redis.
 - **Automated Concept Extraction**: Extracts key conceptual primitives and terminology from uploaded materials to build individualized knowledge graphs.
 
 ### 2. 💬 Factional-Grounded RAG AI Tutor
@@ -135,8 +152,8 @@ To prevent privilege escalation and account collision, the application enforces 
 ### 1. Clone & Install Dependencies
 
 ```bash
-git clone https://github.com/<YOUR_USERNAME>/ai-study-companion.git
-cd ai-study-companion
+git clone https://github.com/KarthikManuru/AI-Study-Companion.git
+cd AI-Study-Companion
 npm install
 ```
 
@@ -186,31 +203,23 @@ npm run db:push
 npm run db:seed
 ```
 
-#### Pre-Configured Demo Credentials:
-- **🎓 Learner Account**:
-  - **Email**: `demo@studycompanion.ai`
-  - **Password**: `password123`
-- **⚙️ Superadmin Account**:
-  - **Email**: `admin@studycompanion.ai`
-  - **Password**: `admin123`
-
 ---
 
 ### 4. Run the Application
 
-You need two terminal windows running concurrently:
+You need two processes running concurrently:
 
 **Terminal 1 — Next.js Application Server**:
 ```bash
 npm run dev
 ```
-*Access web interface at: [http://localhost:3000](http://localhost:3000)*
+*Access local web interface at: [http://localhost:3000](http://localhost:3000)*
 
 **Terminal 2 — Background Asynchronous Worker**:
 ```bash
 npm run worker
 ```
-*Monitors BullMQ queues for document extraction, chunking, and embedding generation.*
+*Monitors Upstash Redis queues for document extraction, chunking, and embedding generation.*
 
 ---
 
